@@ -26,7 +26,6 @@ return [
        ["name" => "editor#download", "url" => "/downloadas", "verb" => "GET"],
        ["name" => "editor#index", "url" => "/{fileId}", "verb" => "GET"],
        ["name" => "editor#public_page", "url" => "/s/{shareToken}", "verb" => "GET"],
-       ["name" => "editor#config", "url" => "/ajax/config/{fileId}", "verb" => "GET"],
        ["name" => "editor#create", "url" => "/ajax/new", "verb" => "POST"],
        ["name" => "editor#convert", "url" => "/ajax/convert", "verb" => "POST"],
        ["name" => "editor#save", "url" => "/ajax/save", "verb" => "POST"],
@@ -43,6 +42,7 @@ return [
     ],
     "ocs" => [
         ["name" => "federation#key", "url" => "/api/v1/key", "verb" => "POST"],
-        ["name" => "federation#keylock", "url" => "/api/v1/keylock", "verb" => "POST"]
+        ["name" => "federation#keylock", "url" => "/api/v1/keylock", "verb" => "POST"],
+        ["name" => "editorapi#config", "url" => "/api/v1/config/{fileId}", "verb" => "GET"]
     ]
 ];
