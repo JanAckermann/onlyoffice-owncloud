@@ -22,6 +22,7 @@ namespace OCA\Onlyoffice\Controller;
 use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 
 use OCA\Onlyoffice\AppConfig;
 
@@ -29,6 +30,13 @@ use OCA\Onlyoffice\AppConfig;
  * Settings controller for the administration page
  */
 class SettingsApiController extends OCSController {
+
+    /**
+     * Url generator service
+     *
+     * @var IURLGenerator
+     */
+    private $urlGenerator;
 
     /**
      * Application configuration
@@ -40,14 +48,17 @@ class SettingsApiController extends OCSController {
     /**
      * @param string $AppName - application name
      * @param IRequest $request - request object
+     * @param IURLGenerator $urlGenerator - url generator service
      * @param AppConfig $config - application configuration
      */
     public function __construct($AppName,
                                     IRequest $request,
+                                    IURLGenerator $urlGenerator,
                                     AppConfig $config
                                     ) {
         parent::__construct($AppName, $request);
 
+        $this->urlGenerator = $urlGenerator;
         $this->config = $config;
     }
 
@@ -63,6 +74,8 @@ class SettingsApiController extends OCSController {
         $url = $this->config->GetDocumentServerUrl();
         if (!$this->config->SettingsAreSuccessful()) {
             $url = "";
+        } else if (!preg_match("/^https?:\/\//i", $url)) {
+            $url = $this->urlGenerator->getAbsoluteURL($url);
         }
 
         return new JSONResponse(["documentServerUrl" => $url]);

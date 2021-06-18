@@ -142,6 +142,7 @@ class Application extends App {
             return new SettingsApiController(
                 $c->query("AppName"),
                 $c->query("Request"),
+                $c->query("URLGenerator"),
                 $this->appConfig
             );
         });
