@@ -173,7 +173,7 @@ class EditorApiController extends OCSController {
      *
      * @param int $fileId - file identificator
      *
-     * @return array
+     * @return JSONResponse
      *
      * @NoAdminRequired
      * @PublicPage
@@ -183,7 +183,7 @@ class EditorApiController extends OCSController {
 
         if (empty($fileId)) {
             $this->logger->error("File for filling was not found: $fileId", ["app" => $this->appName]);
-            return ["error" => $this->trans->t("FileId is empty")];
+            return new JSONResponse(["error" => $this->trans->t("FileId is empty")]);
         }
 
         $userId = $this->userSession->getUser()->getUID();
@@ -191,17 +191,17 @@ class EditorApiController extends OCSController {
         list ($file, $error, $share) = $this->getFile($userId, $fileId);
         if (isset($error)) {
             $this->logger->error("Fill empty: $fileId $error", ["app" => $this->appName]);
-            return ["error" => $error];
+            return new JSONResponse(["error" => $error]);
         }
 
         if ($file->getSize() > 0) {
             $this->logger->error("File is't empty: $fileId", ["app" => $this->appName]);
-            return ["error" => $this->trans->t("Not permitted")];
+            return new JSONResponse(["error" => $this->trans->t("Not permitted")]);
         }
 
         if (!$file->isUpdateable()) {
             $this->logger->error("File without permission: $fileId", ["app" => $this->appName]);
-            return ["error" => $this->trans->t("Not permitted")];
+            return new JSONResponse(["error" => $this->trans->t("Not permitted")]);
         }
 
         $name = $file->getName();
@@ -209,18 +209,18 @@ class EditorApiController extends OCSController {
 
         if (!$template) {
             $this->logger->error("Template for file filling not found: $name ($fileId)", ["app" => $this->appName]);
-            return ["error" => $this->trans->t("Template not found")];
+            return new JSONResponse(["error" => $this->trans->t("Template not found")]);
         }
 
         try {
             $file->putContent($template);
         } catch (NotPermittedException $e) {
             $this->logger->logException($e, ["message" => "Can't put file: $name", "app" => $this->appName]);
-            return ["error" => $this->trans->t("Can't create file")];
+            return new JSONResponse(["error" => $this->trans->t("Can't create file")]);
         }
 
-        return [
-            ];
+        return new JSONResponse([
+            ]);
     }
 
     /**
